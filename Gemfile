@@ -44,6 +44,7 @@ group :development do
   gem 'spring'
 
   gem 'devise' 
+  gem 'rails-i18n'
 end
 
 group :test do

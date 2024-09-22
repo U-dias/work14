@@ -1,32 +1,42 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">Vacation Rental</a>
+    <a class="navbar-brand" href="/"><span class="font1">Vacation Rental</span></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!-- もしログインしていなかったら-->
+        <% if (!user_signed_in?) %>
         <li class="nav-item" style="margin-bottom: 0.1rem;">
-            <span style="margin-left: 3rem;"><a class="btn btn-danger">新規登録</a></span>
+          <span style="margin-left: 1rem;">
+          <%= link_to  "新規登録", new_user_registration_path, class: "btn btn-danger" %>
+          </span>
         </li>
         <li class="nav-item">
-            <span style="margin-left: 3rem;"><a class="btn btn-success text-light">ログイン</a></span>
+          <span style="margin-left: 1rem;">
+            <%= link_to  "ログイン", new_user_session_path, class: "btn btn-success text-light" %>
+          </span>
         </li>
-    </ul>
-    <ul class="navbar-nav mr-auto w-25">
+      </ul>
+      <!-- ログインしていたら -->
+      <% else %>
+      <ul class="navbar-nav" style="margin-left: 2rem;">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            ドロップダウン
+          <figure style="position:relative; top: 0.2rem;" class="avatar <%= current_user.status ? "online" : "offline" %>"></figure>  
+          <%= image_tag avatar_url(current_user), class: "bd-placeholder-img figure-img img-fluid rounded-pill", style: "width: 40px; height: 30px;" %>          
+            <%= current_user.full_name %>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><%= link_to  "ダッシュボード", dashboard_path, class: "dropdown-item btn btn-lightt" %></li>
+            <li><%= link_to  "ユーザ登録情報編集", edit_user_registration_path, class: "dropdown-item btn btn-light" %></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">ログアウト</a></li>
+            <li><%= link_to  "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item btn btn-light" %></li>
           </ul>
         </li>
       </ul>
+      <% end %>
     </div>
   </div>
 </nav>

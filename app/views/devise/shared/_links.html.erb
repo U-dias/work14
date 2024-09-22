@@ -1,25 +1,24 @@
+<div class="all" style="text-align: left;">
 <%- if controller_name != 'sessions' %>
-  <%= link_to "Log in", new_session_path(resource_name) %><br />
+<font style="font-size:0.9rem;">ユーザ登録がお済みの方は<%= link_to "ログイン", new_session_path(resource_name), class: "btn btn-outline-secondary btn-sm" %>してください。<br />
+登録ボタンを押すとメールが送信されます。</br>
+  メールに記載されているリンクをクリックするとアカウントが有効化されます。<br/>
+  </font>
 <% end %>
-
 <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <%= link_to "Sign up", new_registration_path(resource_name) %><br />
+<font style="font-size:0.9rem;"><%= link_to "新規ユーザ登録", new_registration_path(resource_name), class: "btn btn-outline-secondary btn-sm" %>がお済みでない方は先に登録をお願い致します。
 <% end %>
-
+<br/>
 <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-  <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />
+<br/>
+<%= link_to "パスワードをお忘れですか?", new_password_path(resource_name), class: "btn btn-outline-secondary btn-sm" %><br />
 <% end %>
-
 <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
-  <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />
+<br/>
+  <%= link_to "確認のメールが届かない方はこちら", new_confirmation_path(resource_name), class: "btn btn-outline-secondary btn-sm" %><br />
 <% end %>
-
 <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
-  <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />
+  <%= link_to "ロック解除の手順を受け取っていませんか？", new_unlock_path(resource_name), class: "btn btn-outline-secondary btn-sm" %><br />
 <% end %>
-
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %><br />
-  <% end %>
-<% end %>
+</font>
+</div>

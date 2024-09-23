@@ -49,8 +49,14 @@
                             <%= f.submit "保存", class: "btn btn-dark" %>
                         <% end %>                        
                     </div>
-                </div>                
-                
+                </div>
+                                <div>
+                    <% if !current_user.phone_number.blank? %>
+                        <span class="pull-right icon-babu"><i class="far fa-check-circle" style="color:green;"></i></span>&nbsp;&nbsp;電話番号
+                    <% else %>
+                    <div class="text-danger">電話番号が登録されていません</div>
+                        <%= link_to  "電話番号登録", edit_user_registration_path, class: "btn btn-danger" %>
+                    <% end %>                                   
             </div>
         </div>
         </div>

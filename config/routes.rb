@@ -3,8 +3,22 @@ Rails.application.routes.draw do
 
   get '/dashboard', to: 'users#dashboard'
   get 'pages/home'
+  get '/users/:id', to: 'users#show', as: 'user'
 
   post '/users/edit', to: 'users#update'
+
+  resources :rooms, except: [:edit] do
+    member do
+      get 'listing'
+      get 'pricing'
+      get 'description'
+      get 'photo_upload'
+      get 'amenities'
+      get 'location'
+      delete :delete_photo
+      post :upload_photo
+    end
+  end
 
   devise_for :users, 
               path: '', 

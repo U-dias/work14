@@ -12,4 +12,8 @@ Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
 
+
 require("jquery")
+
+window.Dropzone = require("dropzone")
+

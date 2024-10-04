@@ -1,5 +1,7 @@
 class User < ApplicationRecord
 
+  has_many :rooms
+  
   has_one_attached :avatar
 
   validates :full_name, presence: true, length: {maximum: 50}

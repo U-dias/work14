@@ -3,6 +3,11 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   def dashboard
   end
+
+  def show
+    @user = User.find(params[:id])
+  end
+  
   def update
     @user = current_user
     if @user.update!(current_user_params)

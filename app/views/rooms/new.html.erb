@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="mt-4 mb-4"><b>部屋の新規登録</b></h4>
+            <%= form_for @room do |f| %>
+                <div class="row mb-4">            
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            <label>お家のタイプ</label>
+                            <%= f.select :home_type, [["マンション", "マンション"], ["アパート", "アパート"], ["一戸建て", "一戸建て"]],
+                            id: "home_type", prompt: "選択してください", class: "form-control" %>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            <label>お部屋のタイプ</label>
+                            <%= f.select :room_type, [ ["プライベート", "プライベート"], ["シェア", "シェア"]],
+                                id: "room_type", prompt: "選択してください", class: "form-control" %>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            <label>宿泊可能人数</label>
+                            <%= f.select :accommodate, [["2人", 2], ["3人", 3], ["4人", 4], ["5人", 5], ["6人", 6]],
+                                id: "accommodate", prompt: "選択してください", class: "form-control" %>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">          
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            <label>ベッド数</label>
+                            <%= f.select :bed_room, [["1台", 1], ["2台", 2], ["3台", 3], ["4台", 4], ["5台", 5], ["6台", 6]],
+                                id: "bed_room", prompt: "選択してください", class: "form-control" %>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            <label>部屋数</label>
+                            <%= f.select :bath_room, [["1部屋", 1], ["2部屋", 2], ["3部屋", 3], ["4部屋", 4], ["5部屋", 5], ["6部屋", 6]],
+                                id: "bath_rooms", prompt: "選択してください", class: "form-control" %>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+                <%= f.submit "登録する", class: "btn btn-danger w-100" %>        
+            <% end %>
+        </div>
+    </div>    
+</div>

@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <%= render 'room_menu' %>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mt-4 mb-4"><b>写真アップロード</b></h4>
+                    <!-- 写真アップロード -->      
+                    <div class="dropzone" id="myDropzone"  style="height: 200px; border: dashed 1px #333; border-radius: 10px; text-align: center; padding-top: 1rem;" action="/rooms/<%= @room.id %>/upload_photo"></div>
+                    <div class="container">
+                        <div class="row">
+                            <% @room.photos.detach do |photo| %>
+                                <div class="col-4">
+                                    <div class="card mt-2">
+                                        <%= image_tag url_for(photo), class: "card-img-top"  %>
+                                        <div class="card-body">               
+                                            <p class="card-text">
+                                                <%= button_to '削除', delete_photo_room_url(photo_id: photo.id, id: @room.id), 
+                                                    method: :delete,
+                                                    data: { confirm: "本当に削除してよろしいですか?" },
+                                                    style: "z-index: 100;",
+                                                    class: "btn btn-outline-danger btn-sm"
+                                                %>
+                                            </p>
+                    
+                                        </div>
+                                    </div>
+                                </div>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Dropzone.options.myDropzone = {
+        paramName: "file",
+        maxFilesize: 1,
+        acceptedFiles: "image/*",
+        dictDefaultMessage: "ここに写真をドラッグ&ドロップして下さい。<br/>または、クリックすることで写真を選択することもできます。",
+        init: function() {
+            this.on('complete', function (file) {
+                location.reload();
+            })
+        }
+    }
+</script>

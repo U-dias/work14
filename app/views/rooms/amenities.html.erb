@@ -1,0 +1,40 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <%= render 'room_menu' %>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mt-4 mb-4"><b>付属設備</b></h4>
+                    <%= form_for @room do |f| %>
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <%= f.check_box :is_tv %> テレビ
+                            </div>
+                            <div class="col-md-4">
+                                <%= f.check_box :is_kitchen %> キッチン
+                            </div>
+                            <div class="col-md-4">
+                                <%= f.check_box :is_internet %> インターネット
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <%= f.check_box :is_heating %> 暖房
+                            </div>
+                            <div class="col-md-4">
+                                <%= f.check_box :is_air %> エアコン
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                        <%= f.submit "保存", class: "btn btn-danger w-100" %>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

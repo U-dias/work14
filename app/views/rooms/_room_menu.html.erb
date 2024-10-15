@@ -1,0 +1,45 @@
+<div class="card">
+    <div class="card-body">
+    <ul class="list-group">
+        <li class="list-group-item" style="border:none;">
+            <%= link_to "お部屋の概要", listing_room_path, class: "btn btn-light" %>
+            <span class="text-danger"><i class="fa-solid fa-check"></i></span>
+        </li>
+        <li class="list-group-item" style="border:none;">
+            <%= link_to "１泊の宿泊価格", pricing_room_path, class: "btn btn-light" %>
+            <% if !@room.price.blank? %>
+                <span class="text-danger"><i class="fa fa-check"></i></span>
+            <% end %>        
+        </li>
+        <li class="list-group-item" style="border:none;">
+            <%= link_to "お部屋の名前と説明", description_room_path, class: "btn btn-light" %>
+                <% if !@room.listing_name.blank? %>
+            <span class="text-danger"><i class="fa fa-check"></i></span>
+            <% end %>
+        </li>
+        <li class="list-group-item" style="border:none;">
+            <%= link_to "写真アップロード", photo_upload_room_path, class: "btn btn-light", data: { turbolinks: false}  %>
+            <% if !@room.photos.blank? %>
+            <span class="text-danger"><i class="fa fa-check"></i></span>
+            <% end %>
+        </li>
+        <li class="list-group-item" style="border:none;">
+            <%= link_to "付属設備", amenities_room_path, class: "btn btn-light" %>
+            <span class="text-danger"><i class="fa fa-check"></i></span>
+        </li>
+        <li class="list-group-item" style="border:none;">
+            <%= link_to "お部屋の住所", location_room_path, class: "btn btn-light" %>
+            <% if !@room.address.blank? %>
+                <span class="text-danger"><i class="fa fa-check"></i></span>
+            <% end %>        
+        </li>
+    </ul>
+    <div class="mt-4">
+        <% is_ready = !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.address.blank? && !@room.photos.blank? %>
+        <%= form_for @room do |f| %>
+        <%= f.hidden_field :active, value: true %>
+        <%= f.submit "公開する", class: "btn btn-danger w-100", disabled: !is_ready %>
+        <% end %>
+    </div>
+    </div>
+</div>

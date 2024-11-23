@@ -15,5 +15,5 @@ ActiveStorage.start()
 
 require("jquery")
 
-window.Dropzone = require("dropzone")
+//= require dropzone
 

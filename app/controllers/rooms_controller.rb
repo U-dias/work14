@@ -55,13 +55,14 @@ class RoomsController < ApplicationController
   end
 
   def upload_photo
-    @room.photos.attach(params[:file])
+    @room.photo.update(params[:file])
+    flash[:notice] = "画像を保存しました。"
     render json: { success: true }
   end
 
   def delete_photo
-    @image = ActiveStorage::Attachment.find(params[:photo_id])
-    @image.purge
+    @room = Room.find(params[:id])
+    @room.photo.purge
     redirect_to photo_upload_room_path(@room)
   end
 
@@ -71,7 +72,7 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
   end
   def room_params
-    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, :photos)
+    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, :photo)
   end
 
   def is_authorised

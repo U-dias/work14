@@ -1,7 +1,7 @@
 class Room < ApplicationRecord
   belongs_to :user
 
-  has_one_attached :photos
+  has_one_attached :photo
 
   validates :home_type, presence: true
   validates :room_type, presence: true

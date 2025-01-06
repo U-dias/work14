@@ -6,9 +6,10 @@ class RoomsController < ApplicationController
   before_action :authenticate_user!, except: [:show]
   before_action :is_authorised, only: [:listing, :pricing, :description, :photo_upload, :amenities, :location, :update]
 
+
   def index
     @rooms = current_user.rooms
- end
+  end
 
   def new
     @room = current_user.rooms.build
@@ -22,6 +23,10 @@ class RoomsController < ApplicationController
       flash[:alert] = "問題が発生しました。"
       render :new
     end
+  end
+  def show
+    @photo = @room.photo
+    @i = 0
   end
 
   def listing
@@ -54,10 +59,16 @@ class RoomsController < ApplicationController
     redirect_back(fallback_location: request.referer)
   end
 
+
+
   def upload_photo
-    @room.photo.update(params[:file])
-    flash[:notice] = "画像を保存しました。"
-    render json: { success: true }
+    @room.photo.attach(params[:file]) if @room.photo.blank?
+    if @room.photo.update(params[:file])
+      flash[:success] = 'プロフィールを更新しました'
+      redirect_to @user
+    else
+      render 'edit'
+    end
   end
 
   def delete_photo
@@ -65,6 +76,21 @@ class RoomsController < ApplicationController
     @room.photo.purge
     redirect_to photo_upload_room_path(@room)
   end
+  def preload
+    today = Date.today
+    reservations = @room.reservations.where("start_date >= ? OR end_date >= ?", today, today)
+    render json: reservations
+  end
+  #　予約 終了日のAJAX処理
+  def preview
+    start_date = Date.parse(params[:start_date])
+    end_date = Date.parse(params[:end_date])
+    output = {
+      conflict: is_conflict(start_date, end_date, @room)
+    }
+    render json: output
+  end
+
 
 
   private
@@ -80,7 +106,11 @@ class RoomsController < ApplicationController
   end
   
   def is_ready_room
-    !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.photos.blank? && !@room.address.blank?
+    !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.address.blank?
+  end
+  def is_conflict(start_date, end_date, room)
+    check = room.reservations.where("? < start_date AND end_date < ?", start_date, end_date)
+    check.size > 0? true : false
   end
 
 end

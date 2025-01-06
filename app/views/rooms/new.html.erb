@@ -6,22 +6,22 @@
                 <div class="row mb-4">            
                     <div class="col-md-4">
                         <div class="mb-2">
-                            <label>お家のタイプ</label>
-                            <%= f.select :home_type, [["マンション", "マンション"], ["アパート", "アパート"], ["一戸建て", "一戸建て"]],
+                            <label>お部屋のタイプ</label>
+                            <%= f.select :home_type, [["シングル", "シングル"], ["ツイン", "ツイン"], ["ダブル", "ダブル"]],
                             id: "home_type", prompt: "選択してください", class: "form-control" %>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-2">
                             <label>お部屋のタイプ</label>
-                            <%= f.select :room_type, [ ["プライベート", "プライベート"], ["シェア", "シェア"]],
+                            <%= f.select :room_type, [ ["プライベート", "プライベート"], ["ビジネス", "ビジネス"]],
                                 id: "room_type", prompt: "選択してください", class: "form-control" %>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-2">
                             <label>宿泊可能人数</label>
-                            <%= f.select :accommodate, [["2人", 2], ["3人", 3], ["4人", 4], ["5人", 5], ["6人", 6]],
+                            <%= f.select :accommodate, [["1人", 1],["2人", 2], ["3人", 3], ["4人", 4], ["5人", 5], ["6人", 6]],
                                 id: "accommodate", prompt: "選択してください", class: "form-control" %>
                         </div>
                     </div>

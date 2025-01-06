@@ -27,10 +27,33 @@
             <div class="card mb-4">           
                 <div class="card-body">
                     <h5 class="card-title"><%= @user.full_name %>さんが登録している部屋</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">
-                    </h6>
-                    <p class="card-text">
-                    </p>    
+                    <div class="container mt-4">
+                    <div class="row">
+                        <% @user.rooms.each do |room| %>
+                            <% if room.active? %>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <%= link_to room_path(room), data: { turbolinks: false} do %>
+                                                <%= image_tag room_cover(room), style: "width: 100%;" %>
+                                                <h5 class="card-title">
+                                                    <span class="btn btn-light"><%= room.listing_name %></span>
+                                                </h5>
+                                            <% end %>
+                                            <div class="card-text" style="margin-left: 0.5rem;">
+                                                <p style="font-size: 0.8rem; margin-bottom: -0.3rem;">Address</p>
+                                                <p style="margin-bottom: 2rem;"><%= room.address %></p>
+                               
+                                            </div>
+                                
+                                            <h5 class="badge rounded-pill bg-danger text-light" style="font-size: 1rem;">1泊<%= number_to_currency(room.price) %></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% end %>
+                        <% end %>
+                    </div>
+                </div>
                 </div>
             </div>
             <!-- レビュー -->

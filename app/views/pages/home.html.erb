@@ -1,2 +1,79 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container ">
+    <div class="has-bg-img">
+  
+        <h2 class="text-light font2" style="margin-left: 1rem;">
+            <p class="pt-4">どんな部屋をお探しですか？</p>
+        </h2>
+        <!--検索フォーム-->
+        <div>
+         <%= search_form_for @q, url: search_pages_path do |f| %>
+          <!--name_contは、あいまい検索を指定-->
+          <%= f.text_field :listing_name_cont %>
+          <%= f.submit "検索" %>
+         <% end %>
+       <!--検索結果-->
+         <% if @rooms.present? %>
+       <!--検索がヒットした場合-->
+          <% @rooms.each do |room| %>
+           <%= room.id %>
+           <%= room.listing_name %>
+          <% end %>
+         <% else %>
+       <!--検索がヒットしなかった場合-->
+          <p>検索結果はありません</p>
+         <% end %>
+        </div>
+
+</div>
+<!-- ホーム -->
+<div class="container">
+    <div class="row mb-4">
+        <div class="font1"><h3>民泊可能な部屋</h3></div>
+        <% @rooms.each do |room| %>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <span><i class="fa fa-star fa-1x" style="color: gold;"></i></span>
+                        <%= link_to room_path(room), data: { turbolinks: false} do %>
+                            <%= image_tag room_cover(room), style: "width: 100%;" %>
+                            <h5 class="card-title mt-2">
+                                <span class="btn btn-light"><%= room.listing_name %></span>
+                            </h5>
+                        <% end %>
+                        <div class="card-text" style="margin-left: 0.5rem;">
+                            <p style="font-size: 0.8rem; margin-bottom: -0.3rem;">Address</p>
+                            <p style="margin-bottom: 2rem;"><%= room.address %></p>
+                            <%= link_to user_path(room.user), style: "text-decoration:none;" do %>
+                                <figure class="figure">
+                                    <%= image_tag avatar_url(room.user), style: "width: 40px;", class: "figure-img img-fluid rounded-pill" %>
+                                </figure>
+                                <span class="badge bg-light text-dark" style="font-size: 0.9rem;"><%= room.user.full_name %></span>
+                            <% end %>                    
+                        </div>
+                        <h5 class="badge rounded-pill bg-danger text-light" style="font-size: 1rem;">1泊<%= number_to_currency(room.price) %></h5>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+        <%= link_to '戻る' %>
+    </div>
+</div>
+<script>
+$('#start_date').datepicker({
+  dateFormat: 'dd-mm-yy',
+  minDate: 0,
+  maxDate: '3m',
+  onSelect: function(selected) {
+    $('#end_date').datepicker("option", "minDate", selected);
+    $('#end_date').attr("disabled", false);
+  }
+});
+$('#end_date').datepicker({
+  dateFormat: 'dd-mm-yy',
+  minDate: 0,
+  maxDate: '3m',
+  onSelect: function(selected) {
+    $('#start_date').datepicker("option", "maxDate", selected);
+  }
+});
+</script>

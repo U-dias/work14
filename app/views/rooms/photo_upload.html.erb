@@ -8,16 +8,22 @@
                 <div class="card-body">
                     <h4 class="mt-4 mb-4"><b>写真アップロード</b></h4>
 
+                    <%= form_with model: @room do |f| %>
+                        <%= f.check_box :@room.photo %>
+                    <% end %>
+                    <laber for="photo">デフォルトの画像を使用する</laber>
                     <% if @room.photo.attached? %>
-                     <div><%= image_tag(@room.photo) %></div>
-                     <div><%= button_to '削除', delete_photo_room_url, 
-                     method: :delete,
-                     data: { confirm: "本当に削除してよろしいですか?" },
-                     style: "z-index: 100;",
-                     class: "btn btn-outline-danger btn-sm" %></div>
+                     <%= image_tag(@room.photo) %>
+                      <% else %>
+                      <%= image_tag 'default_room.png' %>
                     <% end %>
 
-                    <%= form_with model: @room do |f| %>
+                     <div>
+                      <%= button_to '削除', delete_photo_room_url, method: :delete,data: { confirm: "本当に削除してよろしいですか?" },style: "z-index: 100;",class: "btn btn-outline-danger btn-sm" %>
+                      </div>
+
+                    <laber for="photo">デフォルトの画像を使用する</laber>
+                    
                         <%= f.file_field :photo %>
                         <%= f.submit %>
                     <% end %>
@@ -25,3 +31,5 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>

@@ -18,3 +18,9 @@
     background-color: gray;
   }
 }
+
+.has-bg-img {
+  background-color:green;
+  background: url("/assets/images/home/background01.jpg") center;
+  background-size: cover;
+}

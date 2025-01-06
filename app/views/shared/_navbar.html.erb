@@ -32,6 +32,10 @@
             <li><%= link_to  "ダッシュボード", dashboard_path, class: "dropdown-item btn btn-lightt" %></li>
             <li><%= link_to  "ユーザ登録情報編集", edit_user_registration_path, class: "dropdown-item btn btn-light" %></li>
             <li><hr class="dropdown-divider"></li>
+            <li><%= link_to  "部屋を新規登録", new_room_path, class: "dropdown-item btn btn-light" %></li>
+            <%= link_to "受注予約管理", your_reservations_path, class: "dropdown-item btn btn-light" %>
+            <li><%= link_to  "予約確認", your_trips_path, class: "dropdown-item btn btn-light" %></li>
+            <li><hr class="dropdown-divider"></li>
             <li><%= link_to  "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item btn btn-light" %></li>
           </ul>
         </li>

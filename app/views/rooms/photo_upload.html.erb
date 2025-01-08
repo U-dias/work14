@@ -9,7 +9,7 @@
                     <h4 class="mt-4 mb-4"><b>写真アップロード</b></h4>
 
                     <%= form_with model: @room do |f| %>
-                        <%= f.check_box :@room.photo %>
+                        <%= f.check_box(:photo), {}, checked_va]ue = "" %>
                     <% end %>
                     <laber for="photo">デフォルトの画像を使用する</laber>
                     <% if @room.photo.attached? %>

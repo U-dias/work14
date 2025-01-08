@@ -106,7 +106,7 @@ class RoomsController < ApplicationController
   end
   
   def is_ready_room
-    !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.address.blank?
+    !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.address.blank? &&!@room.photo.empty?
   end
   def is_conflict(start_date, end_date, room)
     check = room.reservations.where("? < start_date AND end_date < ?", start_date, end_date)

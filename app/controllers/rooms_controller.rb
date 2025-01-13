@@ -59,15 +59,13 @@ class RoomsController < ApplicationController
     redirect_back(fallback_location: request.referer)
   end
 
-
-
-  def upload_photo
-    @room.photo.attach(params[:file]) if @room.photo.blank?
-    if @room.photo.update(params[:file])
-      flash[:success] = 'プロフィールを更新しました'
-      redirect_to @user
+  def photo_upload
+    if @room.photo.attach(params[:photo])
+      @room.photo.update(params[:photo])
+      flash[:notice] = '写真を更新しました'
     else
-      render 'edit'
+      flash[:notice] = '写真の更新に失敗しました'
+      redirect_to photo_upload_room_path
     end
   end
 

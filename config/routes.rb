@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     end
     root 'pages#home'
   end
-
+ patch '/rooms/:id/photo_upload' => 'rooms#photo_upload'
 
 
 

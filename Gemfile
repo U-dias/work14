@@ -61,5 +61,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'dropzonejs-rails'
 
 gem 'pry-rails'
+gem 'pry-byebug'
 
 gem 'ransack', '~> 2.6'

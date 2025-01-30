@@ -60,12 +60,10 @@ class RoomsController < ApplicationController
   end
 
   def photo_upload
-    if @room.photo.attach(params[:photo])
-      @room.photo.update(params[:photo])
+    if @room.photo.update!(params[:photo])
       flash[:notice] = '写真を更新しました'
     else
-      flash[:notice] = '写真の更新に失敗しました'
-      redirect_to photo_upload_room_path
+      flash[:notice] = '更新に失敗しました'
     end
   end
 

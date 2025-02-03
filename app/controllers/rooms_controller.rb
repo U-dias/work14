@@ -4,8 +4,8 @@ class RoomsController < ApplicationController
 
   before_action :set_room, except: [:index, :new, :create]
   before_action :authenticate_user!, except: [:show]
-  before_action :is_authorised, only: [:listing, :pricing, :description, :photo_upload, :amenities, :location, :update, default_image]
-
+  before_action :is_authorised, only: [:listing, :pricing, :description, :photo_upload, :amenities, :location, :update]
+  before_action :default_image
 
   def index
     @rooms = current_user.rooms
@@ -68,8 +68,9 @@ class RoomsController < ApplicationController
   end
 
   def default_image
-    if !self.image.attached?
-      self.image.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
+    binding.pry
+    if !@room.photo.attached?
+      room.photo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
     end
   end
 

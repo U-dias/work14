@@ -60,7 +60,8 @@ class RoomsController < ApplicationController
   end
 
   def photo_upload
-    if @room.photo.update!(params[:photo])
+    @room.photo.attached?(params[:photo])
+    if @room.update(room_params)
       flash[:notice] = '写真を更新しました'
     else
       flash[:notice] = '更新に失敗しました'
@@ -68,9 +69,8 @@ class RoomsController < ApplicationController
   end
 
   def default_image
-    binding.pry
     if !@room.photo.attached?
-      room.photo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
+      @room.photo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
     end
   end
 

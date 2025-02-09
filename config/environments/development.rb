@@ -76,5 +76,7 @@ Rails.application.configure do
 
   #activestorageをローカルに保存
   config.active_storage.service = :local
+  config.autoloader = :classic
+
 
 end

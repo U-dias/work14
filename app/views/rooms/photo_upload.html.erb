@@ -8,11 +8,11 @@
                 <div class="card-body">
                     <h4 class="mt-4 mb-4"><b>写真アップロード</b></h4>
                     <%= form_with model: @room, url: photo_upload_room_path do |f| %>
-                     <%= f.file_field :photo %>
+                        <% biding.pry %>
+                     <%= f.file_field :photo ,direct_upload: true %>
                      <%= f.submit %>
-                     <% binding.pry %>
-                     <%= image_tag @room.photo %>
-                     <% end %>
+
+                     <%= image_tag room.photo.attached? rails_storage_proxy_url(room.photo) : asset_path('default_room.png') %>
                     <div>
                      <%= button_to '削除', delete_photo_room_url, method: :delete,data: { confirm: "本当に削除してよろしいですか?" },style: "z-index: 100;",class: "btn btn-outline-danger btn-sm" %>
                     </div>

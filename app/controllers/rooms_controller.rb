@@ -60,8 +60,8 @@ class RoomsController < ApplicationController
   end
 
   def photo_upload
-    @room.photo.attached?(params[:photo])
-    if @room.update(room_params)
+    @room = Room.find(params[:id])
+    if @room.attach(params[:photo])
       flash[:notice] = '写真を更新しました'
     else
       flash[:notice] = '更新に失敗しました'
@@ -69,9 +69,6 @@ class RoomsController < ApplicationController
   end
 
   def default_image
-    if !@room.photo.attached?
-      @room.photo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
-    end
   end
 
   def delete_photo
@@ -101,7 +98,7 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
   end
   def room_params
-    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, :photo)
+    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, photo: [])
   end
 
   def is_authorised
@@ -115,5 +112,9 @@ class RoomsController < ApplicationController
     check = room.reservations.where("? < start_date AND end_date < ?", start_date, end_date)
     check.size > 0? true : false
   end
+  def current_room_params
+    params.require(:room).permit(:photo)
+  end
+
 
 end

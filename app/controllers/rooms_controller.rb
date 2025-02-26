@@ -61,7 +61,7 @@ class RoomsController < ApplicationController
 
   def photo_upload
     @room = Room.find(params[:id])
-    if @room.attach(params[:photo])
+    if @room.photo.attach(params[:photo])
       flash[:notice] = '写真を更新しました'
     else
       flash[:notice] = '更新に失敗しました'
@@ -69,6 +69,9 @@ class RoomsController < ApplicationController
   end
 
   def default_image
+    if !@room.photo.attached?
+      @room.photo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
+    end
   end
 
   def delete_photo

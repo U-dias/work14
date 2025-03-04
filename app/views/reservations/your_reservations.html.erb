@@ -1,0 +1,125 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-danger h3 font1">予約内容(ホスト)</h5>
+            <% if @rooms.blank? %>
+                <h5 class="font1">表示できる予約はありません。</h5>
+            <% end %>
+            
+            <% @rooms.each do |room| %>
+                <% room.reservations.each do |reservation| %>
+                    <% if reservation.Waiting? then %>
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <div class="mt-2">
+                                    <span class="font1 alert alert-success text-center">受注</span>
+                                    <% if reservation.end_date < Date.today %>
+                                        <% if reservation.Waiting? %>
+                                            <%= link_to approve_reservation_path(reservation), method: :post do %>
+                                                <i class="fa fa-thumbs-up fa-lg" style="color: green;"></i><span class="badge bg-success">完了</span>
+                                            <% end %>
+                                    
+                                        <% end  %>
+                                    <% end %> 
+                                </div>
+                                <ul class="list-group mt-4">
+                                    <li class="list-group-item" style="border: none;">
+                                        <span class="font1">申込日：</span><%= I18n.l(reservation.created_at, format: :full_date) %>
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">部屋名：</span>
+                                        <%= link_to room_path(reservation.room), style: "text-decoration: none;", data: { turbolinks: false} do %>                                
+                                            <span class="btn btn-light"><%= reservation.room.listing_name %></span>
+                                        <% end %>                            
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">ゲスト：</span>
+                                        <%= link_to user_path(reservation.room.user), class: "tootip", style: "text-decoration: none;" do %>
+                                                <span class="btn btn-light"><%= reservation.user.full_name %></span>
+                                        <% end %>
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">宿泊日：</span>   <%= I18n.l(reservation.start_date, format: :full_date) %>                     
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">ご出発：</span>   <%= I18n.l(reservation.end_date, format: :full_date) %>                       
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                        <span class="font1">泊数：</span><%=reservation.total/reservation.price %>泊
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                        <span class="font1">料金：</span><%= number_to_currency(reservation.total) %>
+                                    </li>
+                                    <li class="list-group-item mt-4" style="border: none;">
+                                        <% if reservation.end_date < Date.today %>
+                                        <% end %>
+                                    <li>                            
+                                </ul>
+                            </div>
+                        </div>
+ 
+                    <% end %>
+                <% end %>
+            <% end %>
+            <% @rooms.each do |room| %>
+                <% room.reservations.each do |reservation| %>
+                    <% if reservation.Approved? then %>
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <div class="mt-2">
+                                    <span class="font1 alert alert-secondary text-center">完了</span>
+                                    <% if reservation.end_date < Date.today %>
+                                        <% if reservation.Waiting? %>
+                                            <%= link_to approve_reservation_path(reservation), method: :post do %>
+                                                <i class="fa fa-thumbs-up fa-lg" style="color: green;"></i><span class="badge bg-success">完了</span>
+                                            <% end %>
+                                    
+                                        <% end  %>
+                                    <% end %> 
+                                </div>
+                                <ul class="list-group mt-4">
+                                    <li class="list-group-item" style="border: none;">
+                                        <span class="font1">申込日：</span><%= I18n.l(reservation.created_at, format: :full_date) %>
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">部屋名：</span>
+                                        <%= link_to room_path(reservation.room), style: "text-decoration: none;", data: { turbolinks: false} do %>                                
+                                            <span class="btn btn-light"><%= reservation.room.listing_name %></span>
+                                        <% end %>                            
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">ゲスト：</span>
+                                        <%= link_to user_path(reservation.room.user), class: "tootip", style: "text-decoration: none;" do %>
+                                                <span class="btn btn-light"><%= reservation.user.full_name %></span>
+                                        <% end %>
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">宿泊日：</span>   <%= I18n.l(reservation.start_date, format: :full_date) %>                     
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                    <span class="font1">ご出発：</span>   <%= I18n.l(reservation.end_date, format: :full_date) %>                       
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                        <span class="font1">泊数：</span><%=reservation.total/reservation.price %>泊
+                                    </li>
+                                    <li class="list-group-item" style="border: none;">
+                                        <span class="font1">料金：</span><%= number_to_currency(reservation.total) %>
+                                    </li>
+                                    <li class="list-group-item mt-4" style="border: none;">
+                                        <% if reservation.end_date < Date.today %>
+                                            <!-- レビュー -->
+                                            <%= render partial: "reviews/host_form", locals: {reservation: reservation} %>
+                                        <% else %>
+                                            <span class="alert alert-danger" style="font-size: 0.7rem;">チェックアウト後にレビューできます</span>
+                                        <% end %>
+                                    </li>                            
+                                </ul>
+                            </div>
+                        </div>
+ 
+                    <% end %>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>

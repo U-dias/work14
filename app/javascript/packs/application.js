@@ -11,3 +11,11 @@ import "channels"
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+
+require("jquery")
+require("jquery-ui/ui/widgets/datepicker")
+require("jquery-ui/ui/widgets/slider")
+
+//= require dropzone
+

@@ -1,0 +1,102 @@
+<div class="container mt-4">
+    <div class="row">
+        <!-- 右側 -->
+        <div class="col-md-3">
+            <!-- 予約フォーム -->
+            <%= render 'reservations/form' %>
+        </div>
+        <!-- 左側 -->
+        <div class="col-md-9 mb-4">
+            <!-- カルーセル表示 -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <% @room.photo.each do |photo| %>
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= @i %>" class="<%= 'active' if photo.id == @photo[0].id %>" aria-current="true" aria-label="Slide <%= @i+1 %>"></button>
+                                <% @i = @i +1 %>
+                            <% end %>
+                        </div>
+                        <div class="carousel-inner">
+                         <% if @room.photo.attached? %>
+                          <%= image_tag(@room.photo) %>
+                          <% else %>
+                          <%= image_tag 'default_room.png' %>
+                         <% end %>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-2 mt-2">
+                <div class="card-body">
+                    <h2 class="mb-4 mt-4"><%= @room.listing_name %></h2>
+                    <div class="fs-5"><%= @room.address %></div>
+                    <div class="mt-4">
+                    <%= link_to user_path(@room.user), style: "text-decoration:none;" do %>
+                        <%= image_tag avatar_url(@room.user), class: "bd-placeholder-img figure-img img-fluid rounded-pill", style: "width: 40px; height: 30px;" %>
+                        <span class="badge bg-light text-dark"><%= @room.user.full_name %></span>
+                    <% end %>
+                    </div>
+                </div>
+            </div>
+            <!-- 部屋のインフォメーション -->
+            <div class="card mb-2">
+                <div class="card-body">    
+                    <div class="row">
+                        <div class="col-3">
+                            <i class="fas fa-home fa-2x" style="color: cadetblue"></i><br/>
+                            <%= @room.home_type %>
+                        </div>
+                        <div class="col-3">
+                            <i class="fas fa-user fa-2x" style="color: cadetblue"></i><br/>
+                            <%= pluralize(@room.accommodate, "人宿泊可能") %>
+                        </div>
+                        <div class="col-3">
+                            <i class="fas fa-bed fa-2x" style="color: cadetblue"></i><br/>
+                            <%= pluralize(@room.bed_room, "台") %>
+                        </div>
+                        <div class="col-3">
+                            <i class="fas fa-door-closed fa-2x" style="color: cadetblue"></i><br/>
+                            <%= pluralize(@room.bath_room, "部屋") %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">        
+                    <div class="badge bg-secondary mb-4">部屋の詳細</div>
+                    <p><%= @room.summary %></p>
+                </div>
+            </div>            
+            <!-- アメニティ -->
+            <div class="card mt-2">
+                <div class="card-body">        
+                    <div class="badge bg-secondary mb-4">アメニティ</div>
+                    <div class="row">
+                        <div class="col-6">
+                            <ul style="list-style:none;">
+                                <li class="<%= 'text-line-through' if !@room.is_tv %>"><span style="color: black;"><i class="fas fa-tv"></i>&nbsp;テレビ</span></li>
+                                <li class="<%= 'text-line-through' if !@room.is_kitchen %>"><span style="color: black;"><i class="fas fa-blender"></i>&nbsp;キッチン</span></li>
+                                <li class="<%= 'text-line-through' if !@room.is_internet %>"><span style="color: black;"><i class="fas fa-wifi"></i>&nbsp;Wi-Fi</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul style="list-style:none;">
+                                <li class="<%= 'text-line-through' if !@room.is_heating %>"><span style="color: black;"><i class="fab fa-hotjar"></i>&nbsp;暖房</span></li>
+                                <li class="<%= 'text-line-through' if !@room.is_air %>"><span style="color: black;"><i class="fas fa-temperature-low"></i>&nbsp;エアコン</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>           
+            </div>
+        </div>
+    </div>
+</div>

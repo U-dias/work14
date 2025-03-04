@@ -1,0 +1,45 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-danger h3 font1">予約内容(ゲスト)</h5>
+            <% if @trips.blank? %>
+                <h5 class="font1">表示できる予約はありません。</h5>
+            <% end %>
+            <% @trips.each do |trip| %>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" style="border: none;">
+                                <span class="font1">申込日：</span><%= I18n.l(trip.created_at, format: :full_date) %>
+                            </li>
+                            <li class="list-group-item" style="border: none;">
+                            <span class="font1">部屋名：</span>
+                                <%= link_to room_path(trip.room), style: "text-decoration: none;", data: { turbolinks: false} do %>                                
+                                    <span class="btn btn-light"><%= trip.room.listing_name %></span>
+                                <% end %>                            
+                            </li>
+                            <li class="list-group-item" style="border: none;">
+                            <span class="font1">ホスト：</span>
+                                <%= link_to user_path(trip.room.user), class: "tootip", style: "text-decoration: none;" do %>
+                                        <span class="btn btn-light"><%= trip.room.user.full_name %></span>
+                                <% end %>
+                            </li>
+                            <li class="list-group-item" style="border: none;">
+                            <span class="font1">宿泊日：</span>   <%= I18n.l(trip.start_date, format: :full_date) %>                     
+                            </li>
+                            <li class="list-group-item" style="border: none;">
+                            <span class="font1">ご出発：</span>   <%= I18n.l(trip.end_date, format: :full_date) %>                       
+                            </li>
+                            <li class="list-group-item" style="border: none;">
+                                <span class="font1">泊数：</span><%=trip.total/trip.price %>泊
+                            </li>
+                            <li class="list-group-item" style="border: none;">
+                                <span class="font1">料金：</span><%= number_to_currency(trip.total) %>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>

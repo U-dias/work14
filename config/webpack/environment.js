@@ -17,3 +17,5 @@ environment.toWebpackConfig().merge({
         }
     }
 });
+
+environment.splitChunks();

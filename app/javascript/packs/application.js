@@ -2,25 +2,25 @@
 // present in this directory. You're encouraged to place your actual application logic in
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
-const $ = require("jquery");
-
+import $ from "jquery";
 window.$ = $;
 window.jQuery = $;
 
-require("jquery-ui/ui/widgets/core");
-require("jquery-ui/ui/widgets/mouse");
-require("jquery-ui/ui/widgets/datepicker")
-require("jquery-ui/ui/widgets/slider")
+import "jquery-ui/ui/widgets/mouse";
+import "jquery-ui/ui/widgets/datepicker";
+import "jquery-ui/ui/widgets/slider";
 
-console.log('window.jQuery:', window.jQuery);
-console.log('window.$:', window.$);
-console.log("$.fn.jquery:", $.fn.jquery); 
+import "@rails/ujs";
+import "turbolinks";
+import "@rails/activestorage";
+import "channels";
 
-require("@rails/ujs").start()
-require("turbolinks").start()
-require("@rails/activestorage").start()
-require("channels")
+// Bootstrap のインポート（最後に配置）
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap";
 
-require("bootstrap")
-require("bootstrap/dist/css/bootstrap")
-require("@popperjs/core")
+console.log("window.jQuery:", window.jQuery);
+console.log("window.$:", window.$);
+console.log("$.fn.jquery:", $.fn.jquery);
+console.log("window.bootstrap:", window.bootstrap);
+console.log("typeof bootstrap:", typeof bootstrap);

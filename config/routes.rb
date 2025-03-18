@@ -16,7 +16,6 @@ Rails.application.routes.draw do
     end
     root 'pages#home'
   end
- patch '/rooms/:id/photo_upload' => 'rooms#photo_upload'
 
 
 
@@ -25,13 +24,13 @@ Rails.application.routes.draw do
       get 'listing'
       get 'pricing'
       get 'description'
-      get 'photo_upload'
       get 'amenities'
       get 'location'
+      get 'photo_upload'
       get 'preload'
       get 'preview'
       delete :delete_photo
-      post :upload_photo
+      patch :photo_upload
     end
     resources :reservations, only: [:create]
   end

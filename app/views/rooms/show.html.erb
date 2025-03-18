@@ -11,27 +11,13 @@
             <div class="card">
                 <div class="card-body">
                     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            <% @room.photo.each do |photo| %>
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= @i %>" class="<%= 'active' if photo.id == @photo[0].id %>" aria-current="true" aria-label="Slide <%= @i+1 %>"></button>
-                                <% @i = @i +1 %>
-                            <% end %>
-                        </div>
-                        <div class="carousel-inner">
+
                          <% if @room.photo.attached? %>
                           <%= image_tag(@room.photo) %>
                           <% else %>
                           <%= image_tag 'default_room.png' %>
                          <% end %>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+
                     </div>
                 </div>
             </div>

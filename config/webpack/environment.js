@@ -12,8 +12,6 @@ environment.plugins.append(
   })
 );
 
-  
-
 module.exports = environment;
 
 environment.splitChunks();

@@ -38,9 +38,6 @@ class RoomsController < ApplicationController
   def description
   end
 
-  def photo_upload
-  end
-
   def amenities
   end
 
@@ -61,11 +58,20 @@ class RoomsController < ApplicationController
 
   def photo_upload
     @room = Room.find(params[:id])
-    if @room.photo.attach(params[:photo])
-      flash[:notice] = '写真を更新しました'
+    binding.pry
+    if params[:room] && params[:room][:photo].present?
+      if @room.photo.attach(params[:room][:photo])
+        flash[:notice] = '写真を更新しました'
+        redirect_to @room
+      else
+        flash[:alert] = '更新に失敗しました'
+        render :photo_upload
+      end
     else
-      flash[:notice] = '更新に失敗しました'
+      flash[:alert] = 'ファイルが選択されていません'
     end
+  
+    redirect_to @room
   end
 
   def default_image
@@ -101,7 +107,7 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
   end
   def room_params
-    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, photo: [])
+    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, :photo)
   end
 
   def is_authorised

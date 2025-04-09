@@ -7,13 +7,17 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="mt-4 mb-4"><b>写真アップロード</b></h4>
-                    <%= form_with model: @room, url: photo_upload_room_path local: true do |f| %>
+                    <%= form_for @room, url: photo_upload_room_path, local: true do |f| %>
                      <%= f.file_field :photo ,direct_upload: true %>
                      <%= f.submit "更新"%>
+                    <% end %>
 
-                     <%= image_tag(@room.photo.attached? ? url_for(@room.photo) : asset_path('default_room.png')) %>
+                    <% if @room.photo.attached? %>
+                     <%= image_tag @room.photo %>
+                    <% else %>
+                     <%= image_tag "default_room.png" %>
+                    <% end %>
                      
-                     <% end %>
                     <div>
                      <%= button_to '削除', delete_photo_room_url, method: :delete,data: { confirm: "本当に削除してよろしいですか?" },style: "z-index: 100;",class: "btn btn-outline-danger btn-sm" %>
                     </div>

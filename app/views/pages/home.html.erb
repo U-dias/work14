@@ -2,40 +2,44 @@
     <div class="has-bg-img">
   
         <h2 class="text-light font2" style="margin-left: 1rem;">
-            <p class="pt-4">どんな部屋をお探しですか？</p>
         </h2>
         <!--検索フォーム-->
         <div>
          <%= search_form_for @q, url: search_pages_path do |f| %>
           <!--name_contは、あいまい検索を指定-->
           <%= f.text_field :listing_name_cont %>
-          <%= f.submit "施設名で検索" %>
+          <%= f.submit "フリーワード検索" %>
          <% end %>
-       <!--検索結果-->
-         <% if @rooms.present? %>
-       <!--検索がヒットした場合-->
-          <% @rooms.each do |room| %>
-           <%= room.id %>
-           <%= room.listing_name %>
-          <% end %>
-         <% else %>
-       <!--検索がヒットしなかった場合-->
-          <p>検索結果はありません</p>
+         <%= search_form_for @q, url: search_pages_path do |f| %>
+         <div>
+          <%= f.label :address_cont, "住所を含むキーワード" %>
+          <%= f.text_field :address_cont, value: params.dig(:q, :address_cont) %>
+         </div>
+         <div>
+          <%= f.radio_button :address_cont, '東京都', checked: params.dig(:q, :address_eq) == '東京都' %> 東京
+          <%= f.radio_button :address_cont, '大阪府', checked: params.dig(:q, :address_eq) == '大阪' %> 大阪
+          <%= f.radio_button :address_cont, '京都府', checked: params.dig(:q, :address_eq) == '京都' %> 京都
+          <%= f.radio_button :address_cont, '札幌', checked: params.dig(:q, :address_eq) == '札幌' %> 札幌
+         </div>
+          <%= f.submit "検索" %>
          <% end %>
-        </div>
 
+        </div>
+    </div>
 </div>
 <!-- ホーム -->
+<% if params[:q].present? %>
 <div class="container">
+<% if @rooms.present? %>
     <div class="row mb-4">
-        <div class="font1"><h3>民泊可能な部屋</h3></div>
+        <div class="font1"><h3>宿泊可能な部屋</h3></div>
         <% @rooms.each do |room| %>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <span><i class="fa fa-star fa-1x" style="color: gold;"></i></span>
                         <%= link_to room_path(room), data: { turbolinks: false} do %>
-                            <%= image_tag room_cover(room), style: "width: 100%;" %>
+                            <%= image_tag room.photo.attached? ? room.photo : 'default_room.png', width: "100%", height: "100", style: "object-fit: contain; border-radius: 8px;" %>
                             <h5 class="card-title mt-2">
                                 <span class="btn btn-light"><%= room.listing_name %></span>
                             </h5>
@@ -56,7 +60,9 @@
             </div>
         <% end %>
         <%= link_to '戻る' %>
+        </div>
     </div>
+<% end %>
 </div>
 <script>
 $('#start_date').datepicker({
@@ -77,3 +83,4 @@ $('#end_date').datepicker({
   }
 });
 </script>
+<% end %>

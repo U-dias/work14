@@ -35,10 +35,9 @@
         </li>
     </ul>
     <div class="mt-4">
-        <% is_ready = !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.address.blank? && !@room.photo.blank? %>
         <%= form_for @room do |f| %>
         <%= f.hidden_field :active, value: true %>
-        <%= f.submit "公開する", class: "btn btn-danger w-100", disabled: !is_ready %>
+        <%= f.submit "公開する", class: "btn btn-danger w-100" %>
         <% end %>
     </div>
     </div>

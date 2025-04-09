@@ -3,10 +3,10 @@ class RoomsController < ApplicationController
   protect_from_forgery except: [:upload_photo]
 
   before_action :set_room, except: [:index, :new, :create]
+  before_action :is_ready_room, only: [:show, :listing, :edit]
   before_action :authenticate_user!, except: [:show]
   before_action :is_authorised, only: [:listing, :pricing, :description, :photo_upload, :amenities, :location, :update]
-  before_action :default_image
-
+  
   def index
     @rooms = current_user.rooms
   end
@@ -21,15 +21,16 @@ class RoomsController < ApplicationController
       redirect_to listing_room_path(@room), notice: "保存しました。"
     else
       flash[:alert] = "問題が発生しました。"
+      puts @room.errors.full_messages
       render :new
     end
   end
   def show
-    @photo = @room.photo
-    @i = 0
+    @room = Room.find(params[:id]) 
   end
 
   def listing
+    @room = Room.find(params[:id]) 
   end
 
   def pricing
@@ -45,11 +46,20 @@ class RoomsController < ApplicationController
   end
 
   def update
-    new_params = room_params
-    new_params = room_params.merge(active: true) if is_ready_room
+    new_params = room_params.to_h
+
+    new_params.delete(:photo) if new_params[:photo].is_a?(ActiveStorage::Attached::One)
+
+    new_params[:price] ||= @room.price
+    new_params[:listing_name] ||= @room.listing_name
+    new_params[:address] ||= @room.address
+  
+    if @is_ready
+      new_params[:active] = true
+    end
 
     if @room.update(new_params)
-      flash[:notice] = "保存しました。"
+      flash[:notice] = "更新しました。"
     else
       flash[:alert] = "問題が発生しました。"
     end
@@ -58,26 +68,15 @@ class RoomsController < ApplicationController
 
   def photo_upload
     @room = Room.find(params[:id])
-    binding.pry
     if params[:room] && params[:room][:photo].present?
+      @room.photo.purge if @room.photo.attached?
       if @room.photo.attach(params[:room][:photo])
         flash[:notice] = '写真を更新しました'
-        redirect_to @room
       else
         flash[:alert] = '更新に失敗しました'
-        render :photo_upload
       end
-    else
-      flash[:alert] = 'ファイルが選択されていません'
     end
-  
-    redirect_to @room
-  end
-
-  def default_image
-    if !@room.photo.attached?
-      @room.photo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'default_room.png')), filename: 'default_room.png', content_type: 'image/png')
-    end
+    render :photo_upload
   end
 
   def delete_photo
@@ -85,6 +84,8 @@ class RoomsController < ApplicationController
     @room.photo.purge
     redirect_to photo_upload_room_path(@room)
   end
+
+
   def preload
     today = Date.today
     reservations = @room.reservations.where("start_date >= ? OR end_date >= ?", today, today)
@@ -103,11 +104,14 @@ class RoomsController < ApplicationController
 
 
   private
+
   def set_room
     @room = Room.find(params[:id])
+     @room.active = false if @room.active.nil?
   end
+
   def room_params
-    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description, :photo)
+    params.require(:room).permit(:home_type, :room_type, :accommodate, :bed_room, :bath_room, :listing_name, :summary, :address, :is_tv, :is_kitchen, :is_air, :is_heating, :is_internet, :price, :active, :description)
   end
 
   def is_authorised
@@ -115,7 +119,8 @@ class RoomsController < ApplicationController
   end
   
   def is_ready_room
-    !@room.active && !@room.price.blank? && !@room.listing_name.blank? && !@room.address.blank? &&!@room.photo.empty?
+    @room = Room.find(params[:id]) 
+    @is_ready = @room.active && @room.price.present? && @room.listing_name.present? && @room.address.present? && @room.photo.attached?
   end
   def is_conflict(start_date, end_date, room)
     check = room.reservations.where("? < start_date AND end_date < ?", start_date, end_date)
@@ -125,5 +130,5 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:photo)
   end
 
-
 end
+

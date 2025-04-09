@@ -63,3 +63,23 @@ ja:
       over_x_years:
         one:   "1年以上前"
         other: "%{count}年以上前"        
+
+ja:
+  activerecord:
+    attributes:
+      room:
+        price: 値段
+        home_type: お部屋のタイプ
+        room_type: お部屋の用途
+        accommodate: 宿泊可能人数
+        bed_room: ベッド数
+        bath_room: 部屋数
+
+ja:
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      shorts: "%Y/%m/%d"
+      full_date: "%Y/%m/%d"
+        
+

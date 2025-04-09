@@ -2,6 +2,13 @@
     <div class="card mt-4">
         <div class="card-body">
             <h4 class="mt-4 mb-4"><b>部屋の新規登録</b></h4>
+            <% if @room.errors.any? %>
+              <ul>
+               <% @room.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+               <% end %>
+             </ul>
+            <% end %>
             <%= form_for @room do |f| %>
                 <div class="row mb-4">            
                     <div class="col-md-4">
@@ -41,6 +48,11 @@
                                 id: "bath_rooms", prompt: "選択してください", class: "form-control" %>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                    <div class="mb-2">
+                    <label>価格（円）</label>
+                    <%= f.text_field :price, placeholder: "例： 5,000",class: "form-control", required: true %>
+                </div>  </div>      
                     <div class="col-md-4">
                     </div>
                 </div>

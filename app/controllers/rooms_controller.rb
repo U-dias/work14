@@ -22,7 +22,7 @@ class RoomsController < ApplicationController
     else
       flash[:alert] = "問題が発生しました。"
       puts @room.errors.full_messages
-      render :new
+      render "users/dashboard"
     end
   end
   def show

@@ -1,0 +1,173 @@
+<%= form_for([@room, @room.reservations.new]) do |f| %>
+  <div class="card">
+    <div class="card-body">
+      <span class="badge bg-danger mb-2">1泊 <%= number_to_currency(@room.price) %></span>
+      <h5 class="card-title text-danger h4 font1 mb-4"><strong><span>予約はこちら</span></strong></h5>
+      <% if (!user_signed_in?) %>
+        <%= link_to  "ログインすると予約ができます", new_user_session_path, class: "btn btn-success text-light" %>
+      <% else %>
+        <div class="row mb-4">
+            <div class="col-6">
+                <span class="badge bg-success">チェックイン</span>
+                <%= f.text_field :start_date, readonly: true, placeholder: "ﾁｪｯｸｲﾝ", class: "form-control" %>
+            </div>
+            <div class="col-6">
+                <span class="badge bg-primary">チェックアウト</span>
+                <%= f.text_field :end_date, readonly: true, placeholder: "ﾁｪｯｸｱｳﾄ", class: "form-control" %>
+            </div>
+            <div class="guest">
+             <%= f.label :guest,"宿泊人数" %>
+             <%= f.select :guest, options_for_select([["選択して下さい", nil],1,2,3,4,5]), required: true %>
+            </div>
+        </div>
+        <h4 class="message-alert text-center"><span id="message"></span></h4>
+        <div id="preview" style="display: none">
+          <table class="reservation-table">
+            <tbody>
+                <tr>
+                  <td><span class="badge bg-secondary">1泊料金</span></td>
+                  <td class="text-right", style="white-space: nowrap"><%= number_to_currency(@room.price) %></td>
+                </tr>
+                <tr>
+                  <td><span class="badge bg-secondary">宿泊数</span></td>
+                  <td class="text-right"><span id="reservation_nights"></span>泊</td>
+                </tr>
+                <tr>
+                  <td class="total"><span class="badge bg-info">合計料金</span></td>
+                  <td class="text-right", style="white-space: nowrap"><span id="reservation_total"></span>円</td>
+                </tr>
+              </tbody>
+          </table>
+        </div>  
+        <div class="mt-4">
+          <%= f.submit "予約する", id: "btn_book", class: "btn btn-danger w-100", disabled: true %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<script>
+function checkDate(date) {
+  dmy = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+  return [$.inArray(dmy, unavailableDates) == -1];
+}
+$(function() {
+  unavailableDates = [];
+  $.ajax({
+    url: '<%= preload_room_path(@room) %>',
+    dateTyp: 'json',
+    success: function(data) {
+      $.each(data, function(arrID, arrValue) {
+          for(var d = new Date(arrValue.start_date); d <= new Date(arrValue.end_date); d.setDate(d.getDate() + 1)) {
+            unavailableDates.push($.datepicker.formatDate('d-m-yy', d));
+          }
+      });
+      $('#reservation_start_date').datepicker({
+        dateFormat: 'dd-mm-yy',
+        //今日から３ヶ月先まで予約可能
+        minDate: 0,
+        maxDate: '3m',
+        beforeShowDay: checkDate,
+        onSelect: function(selected) {
+          $('#reservation_end_date').datepicker("option", "minDate", selected);
+          $('#reservation_end_date').attr("disabled", false);
+          var start_date = $('#reservation_start_date').datepicker('getDate');
+          var end_date = $('#reservation_end_date').datepicker('getDate');
+          //２日選択すると１泊になる
+          var nights = (end_date - start_date)/1000/60/60/24;
+          var input = {
+            'start_date': start_date,
+            'end_date': end_date
+          }
+          $.ajax({
+            url: '<%= preview_room_path(@room) %>',
+            data: input,
+            success: function(data) {
+              if(data.conflict) {
+                $('#message').text("この日付はご利用できません。");
+                $('#preview').hide();
+                $('#btn_book').attr('disabled', true);
+              } else {
+                $('#message').text("");
+                $('#preview').show();
+                $('#btn_book').attr('disabled', false);
+                var total = nights * <%= @room.price %>
+                $('#reservation_nights').text(nights);
+                $('#reservation_total').text(total);
+              }
+            }
+          });
+        }
+      });
+      $('#reservation_end_date').datepicker({
+        dateFormat: 'dd-mm-yy',
+        //今日から３ヶ月先まで予約可能
+        minDate: 0,
+        maxDate: '3m',
+        beforeShowDay: checkDate,
+        onSelect: function(selected) {
+          $('#reservation_start_date').datepicker("option", "maxDate", selected);
+          
+          var start_date = $('#reservation_start_date').datepicker('getDate');
+          var end_date = $('#reservation_end_date').datepicker('getDate');
+          var nights = (end_date - start_date)/1000/60/60/24;
+          var input = {
+            'start_date': start_date,
+            'end_date': end_date
+          }
+          $.ajax({
+            url: '<%= preview_room_path(@room) %>',
+            data: input,
+            success: function(data) {
+              if(data.conflict) {
+                $('#message').text("この日付ではご予約できません。");
+                $('#preview').hide();
+                $('#btn_book').attr('disabled', true);
+              }
+              else if(nights ==0 ){
+                $('#message').text("この日付ではご予約できません。");
+                $('#preview').hide();
+                $('#btn_book').attr('disabled', true);
+              }
+            
+              else {
+                $('#message').text("");
+                $('#preview').show();
+                $('#btn_book').attr('disabled', false);
+                var total = nights * <%= @room.price %>
+                $('#reservation_nights').text(nights);
+                $('#reservation_total').text(total);
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+});
+//確認ダイアログ用
+function check_form() {
+  var start_date = $('#reservation_start_date').datepicker('getDate');
+  var end_date = $('#reservation_end_date').datepicker('getDate');
+  var check_in_year = start_date.getFullYear()
+  var check_in_month = start_date.getMonth()+1
+  var check_in_day = start_date.getDate()
+  var check_out_year = end_date.getFullYear()
+  var check_out_month = end_date.getMonth()+1
+  var check_out_day = end_date.getDate()
+  var nights = (end_date - start_date)/1000/60/60/24;
+  var total = nights * <%= @room.price %>
+  var listing_name = '<%= @room.listing_name %>'
+  var submitMessage = window.confirm(
+    listing_name + 'の予約内容を確認してください。\r\n\r\n'+ 'チェックイン: ' + check_in_year + '年' + check_in_month +'月' + check_in_day + '日14:00〜\r\n'
+     + 'チェックアウト: '+ check_out_year + '年' + check_out_month +'月' + check_out_day + '日〜11:00\r\n'
+      +'宿泊日数: ' + nights + '泊\r\n'
+       + '合計金額: ' + total + '円(税＋サービス料含む)\r\n\r\n'
+       + 'この内容で予約してもよろしいですか？'
+    
+    );
+  if (!submitMessage) {
+    return false;
+  };
+};
+</script>
